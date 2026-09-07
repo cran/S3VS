@@ -240,7 +240,7 @@ fit_glm <- S3VS(
   y = y_glm,
   X = X_glm,
   family = "binomial",
-  method_xy = "_survtopk",
+  method_xy = "topk",
   param_xy = list(k = 2),
   method_xx = "percthresh",
   param_xx = list(thresh = 90),

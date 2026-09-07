@@ -11,8 +11,8 @@ Variable Selection in Leading Sets for Generalized Linear Models under the S3VS 
 }
 
 \usage{
-VS_method_GLM(y, X, vsel_method, alpha = 0.5, verbose = FALSE, 
-              parallel = FALSE, ncores = NULL)
+VS_method_GLM(y, X, vsel_method, lambda = c("lambda.min","lambda.1se"), 
+  alpha = 0.5, verbose = FALSE)
 }
 
 \arguments{
@@ -22,13 +22,11 @@ VS_method_GLM(y, X, vsel_method, alpha = 0.5, verbose = FALSE,
   %
   \item{vsel_method}{Character string indicating the variable-selection engine used at each iteration. Available options are \code{"NLP"} and \code{"LASSO"}. See Details for more information.}
   %
+  \item{lambda}{Only used when \code{vsel_method == "LASSO"} or \code{vsel_method == "ENET"}. The choice for the tuning parameter used by the \code{glmnet} package}.
+  %
   \item{alpha}{Only used when \code{vsel_method == "ENET"}. Elastic net mixing parameter, with \eqn{\alpha \in (0,1)}.}
   %
   \item{verbose}{If \code{TRUE}, some information is printed. \code{FALSE}, by default.}
-  %
-  \item{parallel}{Logical. If \code{TRUE}, cross-validation steps in penalized regression methods (e.g., LASSO or elastic net via \code{glmnet}) are executed in parallel using the \pkg{doParallel} backend. Defaults to \code{FALSE}. The package \pkg{doParallel} must be installed when \code{parallel = TRUE}.}
-  %
-  \item{ncores}{Integer; number of CPU cores to use when \code{parallel = TRUE}. If \code{NULL} (default), the number of cores is set to one fewer than the total number detected on the system. Ignored when \code{parallel = FALSE}.}
 }
 
 %%\details{
@@ -54,7 +52,7 @@ Nilotpal Sanyal <nsanyal@utep.edu>, Padmore N. Prempeh <pprempeh@albany.edu>
 %%}
 
 \seealso{
-\code{\link[mombf]{modelSelection}}, \link[glmnet]{cv.glmnet}, \link[ncvreg]{cv.ncvreg}
+\code{\link[modelSelection]{modelSelection}}, \link[glmnet]{cv.glmnet}, \link[ncvreg]{cv.ncvreg}
 }
 
 \examples{
@@ -68,6 +66,6 @@ eta <- X[,1] + 0.5 * X[,2]
 prob <- 1 / (1 + exp(-eta))
 y <- rbinom(n, size = 1, prob = prob)
 # Run VS_method
-VS_method_GLM(y, X, vsel_method = "LASSO", verbose = FALSE)
+VS_method_GLM(y, X, vsel_method = "LASSO", lambda = "lambda.1se", verbose = FALSE)
 }
 

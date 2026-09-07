@@ -11,7 +11,8 @@ Variable Selection in Leading Sets for Linear Models under the S3VS Framework
 }
 
 \usage{
-VS_method_LM(y, X, vsel_method, alpha = 0.5, verbose = FALSE)
+VS_method_LM(y, X, vsel_method, lambda = c("lambda.min","lambda.1se"), 
+  alpha = 0.5, verbose = FALSE)
 }
 
 \arguments{
@@ -20,6 +21,8 @@ VS_method_LM(y, X, vsel_method, alpha = 0.5, verbose = FALSE)
   \item{X}{Predictor matrix. Can be a base matrix or something \code{as.matrix()} can coerce. No missing values are allowed.}
   %
   \item{vsel_method}{Character string indicating the variable-selection engine used at each iteration. Available options are \code{"NLP"}, \code{"LASSO"}, \code{"SCAD"}, \code{"MCP"}. See Details for more information.}
+  %
+  \item{lambda}{Only used when \code{vsel_method == "LASSO"} or \code{vsel_method == "ENET"}. The choice for the tuning parameter used by the \code{glmnet} package}.
   %
   \item{alpha}{Only used when \code{vsel_method == "ENET"}. Elastic net mixing parameter, with \eqn{\alpha \in (0,1)}.}
   %
@@ -49,7 +52,7 @@ Nilotpal Sanyal <nsanyal@utep.edu>, Padmore N. Prempeh <pprempeh@albany.edu>
 %%}
 
 \seealso{
-\code{\link[mombf]{modelSelection}}, \link[glmnet]{cv.glmnet}, \link[ncvreg]{cv.ncvreg}
+\code{\link[modelSelection]{modelSelection}}, \link[glmnet]{cv.glmnet}, \link[ncvreg]{cv.ncvreg}
 }
 
 \examples{

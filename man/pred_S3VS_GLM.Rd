@@ -43,7 +43,7 @@ Nilotpal Sanyal <nsanyal@utep.edu>, Padmore N. Prempeh <pprempeh@albany.edu>
 %%}
 
 \seealso{
-\code{\link[mombf]{rnlp}}, \link[glmnet]{cv.glmnet}
+\code{\link[modelSelection]{rnlp}}, \link[glmnet]{cv.glmnet}
 }
 
 \examples{

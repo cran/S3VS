@@ -15,11 +15,12 @@ S3VS_GLM(y, X,
   method_xy = c("topk", "fixedetasqthresh", "percetasqthresh"), param_xy, 
   method_xx = c("topk", "fixedcorthresh", "perccorthresh"), param_xx, 
   vsel_method = c("NLP", "LASSO", "ENET", "SCAD", "MCP"), 
+  lambda = c("lambda.min","lambda.1se"),
   alpha = 0.5,
   method_sel = c("conservative", "liberal"), 
   method_rem = c("conservative_begin", "conservative_end", "liberal"), 
   sel_regout = FALSE, rem_regout = FALSE, update_y_thresh = NULL, 
-  m = 100, nskip = 3, verbose = FALSE, seed = NULL, parallel = FALSE)
+  m = 100, nskip = 3, verbose = FALSE, seed = NULL)
 }
 
 \arguments{
@@ -38,6 +39,8 @@ S3VS_GLM(y, X,
   \item{param_xx}{Tuning parameter for \code{method_xx}; same interpretation as \code{param_xy} but applied to inter-predictor association (absolute value of the correlation coefficient).}
   %
   \item{vsel_method}{Character string specifying the variable selection method to be used within each \emph{leading set}. Available options are \code{"NLP"}, \code{"LASSO"}, \code{"ENET"}, \code{"SCAD"}, \code{"MCP"}.}
+  %
+  \item{lambda}{Only used when \code{vsel_method == "LASSO"} or \code{vsel_method == "ENET"}. The choice for the tuning parameter used by the \code{glmnet} package}.
   %
   \item{alpha}{Only used when \code{vsel_method == "ENET"}. Elastic net mixing parameter, with \eqn{\alpha \in (0,1)}.}
   %
@@ -58,8 +61,6 @@ S3VS_GLM(y, X,
   \item{verbose}{Logical. If \code{TRUE}, prints detailed progress information at each iteration (e.g., iteration number, predictors selected or removed). Defaults to \code{FALSE}.}
   %
   \item{seed}{If supplied, sets the random seed via \code{set.seed()} to ensure reproducibility of stochastic components. If \code{NULL}, no seed is set.}
-  %
-  \item{parallel}{Logical. If \code{TRUE}, attempts to perform some computations in parallel mode, which is strongly recommended for faster execution. Defaults to \code{FALSE}.}
 }
 
 \details{
@@ -109,7 +110,7 @@ y <- rbinom(n, size = 1, prob = prob)
 res_glm <- S3VS_GLM(y = y, X = X,
                 method_xy = "topk", param_xy = list(k = 1),
                 method_xx = "topk", param_xx = list(k = 3),
-                vsel_method = "LASSO", 
+                vsel_method = "LASSO", lambda = "lambda.1se", 
                 method_sel = "conservative", method_rem = "conservative_begin", 
                 sel_regout = FALSE, rem_regout = FALSE,
                 m = 100, nskip = 3, verbose = TRUE, seed = 123)

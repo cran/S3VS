@@ -11,7 +11,8 @@ Variable Selection in Leading Sets for Survival Models under the S3VS Framework
 }
 
 \usage{
-VS_method_SURV(y, X, surv_model, vsel_method, alpha = 0.5,
+VS_method_SURV(y, X, surv_model, vsel_method, 
+  lambda = c("lambda.min","lambda.1se"), alpha = 0.5,
   p_thresh = 0.1, gamma = 0.9, verbose = FALSE, ...)
 }
 
@@ -23,6 +24,8 @@ VS_method_SURV(y, X, surv_model, vsel_method, alpha = 0.5,
   \item{surv_model}{Character string specifying the survival model. Must be explicitly provided; there is no default. Values are \code{"Cox"} for proportional hazards models, \code{"AFT"} for accelerated failure time models.}
   %
   \item{vsel_method}{Character string indicating the variable-selection engine used at each iteration. Available options are \code{"COXGLMNET"} for \code{surv_model = "COX"} and \code{"AFTREG"}, \code{"AFTGEE"}, \code{"BRIDGE"}, and \code{"PVAFT"} for \code{surv_model = "AFT"}. See Details for more information.}
+  %
+  \item{lambda}{Only used when \code{vsel_method == "LASSO"} or \code{vsel_method == "ENET"}. The choice for the tuning parameter used by the \code{glmnet} package}.
   %
   \item{alpha}{Only used when \code{vsel_method == "ENET"}. Elastic net mixing parameter, with \eqn{\alpha \in (0,1)}.}
   %
@@ -64,8 +67,8 @@ Nilotpal Sanyal <nsanyal@utep.edu>, Padmore N. Prempeh <pprempeh@albany.edu>
 \examples{
 # Simulate survival data (Cox)
 set.seed(123)
-n <- 100
-p <- 150
+n <- 50
+p <- 100
 X <- matrix(rnorm(n * p), n, p)
 colnames(X) <- paste0("V", 1:p)
 eta <- X[,1] + 0.5 * X[,2]
@@ -76,6 +79,7 @@ time <- pmin(T_event, C)
 status <- as.integer(T_event <= C)
 y_surv <- list(time = time, status = status)
 # Run VS_method
-VS_method_SURV(y_surv, X, surv_model = "COX", vsel_method = "COXGLMNET", verbose = FALSE)
+VS_method_SURV(y_surv, X, surv_model = "COX", vsel_method = "LASSO", 
+  lambda = "lambda.1se", verbose = FALSE)
 }
 

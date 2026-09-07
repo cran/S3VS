@@ -22,6 +22,7 @@ S3VS(
   method_xx = c("topk", "fixedthresh", "percthresh"), 
   param_xx, 
   vsel_method = NULL, 
+  lambda = c("lambda.min","lambda.1se"),
   alpha = 0.5,
   method_sel = c("conservative", "liberal"), 
   method_rem = c("conservative_begin", "conservative_end", "liberal"), 
@@ -61,8 +62,10 @@ S3VS(
   Available options depend on the model type:
   \itemize{
     \item For linear models (\code{S3VS_LM}) and generalized linear models (\code{S3VS_GLM}): \code{"NLP"}, \code{"LASSO"}, \code{"ENET"}, \code{"SCAD"}, \code{"MCP"}.
-    \item For survival models (\code{S3VS_SURV}): \code{"LASSO"}, \code{"ENET"} for \code{surv_model=COX} and \code{"AFTGEE"}, \code{"BRIDGE"}, \code{"PVAFT"} for \code{surv_model=AFT}.
+    \item For survival models (\code{S3VS_SURV}): \code{"LASSO"}, \code{"ENET"} for \code{surv_model=COX} and \code{"AFTREG"}, \code{"AFTGEE"}, \code{"BRIDGE"}, \code{"PVAFT"} for \code{surv_model=AFT}.
   }}
+  %
+  \item{lambda}{Only used when \code{vsel_method == "LASSO"} or \code{vsel_method == "ENET"}. The choice for the tuning parameter used by the \code{glmnet} package}.
   %
   \item{alpha}{Only used when \code{vsel_method == "ENET"}. Elastic net mixing parameter, with \eqn{\alpha \in (0,1)}.}
   %
@@ -161,7 +164,7 @@ y <- X[,1] + 0.5 * X[,2] + rnorm(n)
 res_lm <- S3VS(y = y, X = X, family = "normal",
                method_xy = "topk", param_xy = list(k=1),
                method_xx = "topk", param_xx = list(k=3),
-               vsel_method = "LASSO", method_sel = "conservative", 
+               vsel_method = "LASSO", lambda = "lambda.1se", method_sel = "conservative", 
                method_rem = "conservative_begin", rem_regout = FALSE, 
                m = 100, nskip = 3, verbose = TRUE, seed = 123)
 # View selected predictors
@@ -181,7 +184,7 @@ y <- rbinom(n, size = 1, prob = prob)
 res_glm <- S3VS(y = y, X = X, family = "binomial",
                 method_xy = "topk", param_xy = list(k = 1),
                 method_xx = "topk", param_xx = list(k = 3),
-                vsel_method = "LASSO", 
+                vsel_method = "LASSO", lambda = "lambda.1se", 
                 method_sel = "conservative", method_rem = "conservative_begin", 
                 sel_regout = FALSE, rem_regout = FALSE,
                 m = 100, nskip = 3, verbose = TRUE, seed = 123)
@@ -207,7 +210,7 @@ res_surv <- S3VS(y = y_surv, X = X, family = "survival",
                  surv_model = "COX", 
                  method_xy = "topk", param_xy = list(k = 1),
                  method_xx = "topk", param_xx = list(k = 3),
-                 vsel_method = "COXGLMNET",
+                 vsel_method = "LASSO", lambda = "lambda.1se", 
                  method_sel = "conservative", method_rem = "conservative_begin",
                  sel_regout = FALSE, rem_regout = FALSE, 
                  m = 100, nskip = 3, verbose = TRUE, seed = 123)

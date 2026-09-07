@@ -14,7 +14,8 @@ Structured Screen-and-Select Variable Selection in Survival Models
 S3VS_SURV(y, X, surv_model = c("COX", "AFT"), 
   method_xy = c("topk", "fixedmuthresh", "percmuthresh"), param_xy, 
   method_xx = c("topk", "fixedcorthresh", "perccorthresh"), param_xx, 
-  vsel_method = c("LASSO", "ENET", "AFTGEE", "BRIDGE", "PVAFT"), 
+  vsel_method = c("LASSO", "ENET", "AFTREG", "AFTGEE", "BRIDGE", "PVAFT"),
+  lambda = c("lambda.min","lambda.1se"), 
   alpha = 0.5,
   method_sel = c("conservative", "liberal"), 
   method_rem = c("conservative_begin", "conservative_end", "liberal"), 
@@ -39,7 +40,9 @@ S3VS_SURV(y, X, surv_model = c("COX", "AFT"),
   %
   \item{param_xx}{Tuning parameter for \code{method_xx}; same interpretation as \code{param_xy} but applied to inter-predictor association (absolute value of the correlation coefficient).}
   %
-  \item{vsel_method}{Character string specifying the variable selection method to be used within each \emph{leading set}. Available options are \code{"LASSO"}, \code{"ENET"} for \code{surv_model=COX} and \code{"AFTGEE"}, \code{"BRIDGE"}, \code{"PVAFT"} for \code{surv_model=AFT}.}
+  \item{vsel_method}{Character string specifying the variable selection method to be used within each \emph{leading set}. Available options are \code{"LASSO"}, \code{"ENET"} for \code{surv_model=COX} and \code{"AFTREG"}, \code{"AFTGEE"}, \code{"BRIDGE"}, \code{"PVAFT"} for \code{surv_model=AFT}.}
+  %
+  \item{lambda}{Only used when \code{vsel_method == "LASSO"} or \code{vsel_method == "ENET"}. The choice for the tuning parameter used by the \code{glmnet} package}.
   %
   \item{alpha}{Only used when \code{vsel_method == "ENET"}. Elastic net mixing parameter, with \eqn{\alpha \in (0,1)}.}
   %
@@ -113,7 +116,7 @@ res_surv <- S3VS(y = y_surv, X = X, family = "survival",
                  surv_model = "COX", 
                  method_xy = "topk", param_xy = list(k = 1),
                  method_xx = "topk", param_xx = list(k = 3),
-                 vsel_method = "COXGLMNET",
+                 vsel_method = "LASSO", lambda = "lambda.1se", 
                  method_sel = "conservative", method_rem = "conservative_begin",
                  sel_regout = FALSE, rem_regout = FALSE, 
                  m = 100, nskip = 3, verbose = TRUE, seed = 123)

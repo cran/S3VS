@@ -11,7 +11,8 @@ Variable Selection in Leading Sets under the S3VS Framework
 }
 
 \usage{
-VS_method(y, X, family, surv_model = NULL, vsel_method, alpha = 0.5,
+VS_method(y, X, family, surv_model = NULL, vsel_method, 
+          lambda = c("lambda.min","lambda.1se"), alpha = 0.5,
           p_thresh = 0.1, gamma = 0.9, verbose = FALSE)
 }
 
@@ -25,6 +26,8 @@ VS_method(y, X, family, surv_model = NULL, vsel_method, alpha = 0.5,
   \item{surv_model}{Character string specifying the survival model (\code{family="survival"} only). Must be explicitly provided; there is no default. Values are \code{"Cox"} for proportional hazards models, \code{"AFT"} for accelerated failure time models.}
   %
   \item{vsel_method}{Character string indicating the variable-selection engine used inside \code{S3VS} at each iteration. Allowed values depend on \code{family}: for \code{family = "normal"}(\code{S3VS_LM}) and \code{"binomial"} (\code{S3VS_GLM}), available options are \code{"NLP"}, \code{"ENET"}, \code{"LASSO"}, \code{"SCAD"}, \code{"MCP"}; for \code{family = "survival"}, available options are \code{"LASSO"}, \code{"ENET"} for \code{surv_model = "COX"} and \code{"AFTGEE"}, \code{"BRIDGE"}, \code{"PVAFT"} for \code{surv_model = "AFT"}. See Details for more information.}
+  %
+  \item{lambda}{Only used when \code{vsel_method == "LASSO"} or \code{vsel_method == "ENET"}. The choice for the tuning parameter used by the \code{glmnet} package}.
   %
   \item{alpha}{Only used when \code{vsel_method == "ENET"}. Elastic net mixing parameter, with \eqn{\alpha \in (0,1)}.}
   %

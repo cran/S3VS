@@ -11,7 +11,8 @@ Predicted Survival Probabilities Using S3VS-Selected Predictors in Generalized L
 }
 
 \usage{
-pred_S3VS_SURV(y, X, surv_model = c("AFT", "COX"), method = c("AFTREG", "AFTGEE"), times)
+pred_S3VS_SURV(y, X, surv_model = c("AFT", "COX"), 
+  method = c("AFTREG", "AFTGEE", "COXGLMNET"))
 }
 
 \arguments{
@@ -22,8 +23,6 @@ pred_S3VS_SURV(y, X, surv_model = c("AFT", "COX"), method = c("AFTREG", "AFTGEE"
   \item{surv_model}{Character string specifying the survival model. Must be explicitly provided; there is no default. Values are \code{"Cox"} for proportional hazards models, \code{"AFT"} for accelerated failure time models.}
   %
   \item{method}{Character string indicating the prediction method used. Available options are \code{"COXGLMNET"} for \code{surv_model = "COX"} and \code{"AFTREG"} and \code{"AFTGEE"} for \code{surv_model = "AFT"}. See Details for more information.}
-  %
-  \item{times}{Vector of time points where predicted survival probabilities will be computed.}
 }
 
 %%\details{
@@ -32,7 +31,7 @@ pred_S3VS_SURV(y, X, surv_model = c("AFT", "COX"), method = c("AFTREG", "AFTGEE"
 
 \value{
 A list containing:
-\item{y.pred}{Predicted response}
+\item{y.pred}{Predicted survival probabilities at the event times}
 \item{coef}{Coefficient estimates of the predictors used for prediction}
 }
 
@@ -68,7 +67,7 @@ status <- as.integer(T_event <= C)
 y_surv <- list(time = time, status = status)
 # Run S3VS for linear models
 res_surv <- S3VS(y = y_surv, X = X, family = "survival", 
-                 surv_model = "COX", vsel_method = "COXGLMNET",
+                 surv_model = "COX", vsel_method = "LASSO",
                  method_xy = "topk", param_xy = list(k = 1),
                  method_xx = "topk", param_xx = list(k = 3),
                  method_sel = "conservative", method_rem = "conservative_begin",

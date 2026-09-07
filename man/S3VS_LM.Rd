@@ -14,6 +14,7 @@ S3VS_LM(y, X, cor_xy = NULL,
   method_xy = c("topk", "fixedcorthresh", "perccorthresh"), param_xy, 
   method_xx = c("topk", "fixedcorthresh", "perccorthresh"), param_xx, 
   vsel_method = c("NLP", "LASSO", "ENET", "SCAD", "MCP"), 
+  lambda = c("lambda.min","lambda.1se"),
   alpha = 0.5,
   method_sel = c("conservative", "liberal"), 
   method_rem = c("conservative_begin", "conservative_end", "liberal"), 
@@ -39,6 +40,8 @@ S3VS_LM(y, X, cor_xy = NULL,
   \item{param_xx}{Tuning parameter for \code{method_xx}; same interpretation as \code{param_xy} but applied to inter-predictor association (absolute value of the correlation coefficient).}
   %
   \item{vsel_method}{Character string specifying the variable selection method to be used within each \emph{leading set}. Available options are \code{"NLP"}, \code{"LASSO"}, \code{"ENET"}, \code{"SCAD"}, \code{"MCP"}.}
+  %
+  \item{lambda}{Only used when \code{vsel_method == "LASSO"} or \code{vsel_method == "ENET"}. The choice for the tuning parameter used by the \code{glmnet} package}.
   %
   \item{alpha}{Only used when \code{vsel_method == "ENET"}. Elastic net mixing parameter, with \eqn{\alpha \in (0,1)}.}
   %
@@ -101,7 +104,7 @@ y <- X[,1] + 0.5 * X[,2] + rnorm(n)
 res_lm <- S3VS_LM(y = y, X = X,
                method_xy = "topk", param_xy = list(k=1),
                method_xx = "topk", param_xx = list(k=3),
-               vsel_method = "LASSO", method_sel = "conservative", 
+               vsel_method = "LASSO", lambda = "lambda.1se", method_sel = "conservative", 
                method_rem = "conservative_begin", rem_regout = FALSE, 
                m = 100, nskip = 3, verbose = TRUE, seed = 123)
 # View selected predictor
